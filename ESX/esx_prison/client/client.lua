@@ -18,7 +18,7 @@ local jailTime = 0
 
 Citizen.CreateThread(function()
 	while ESX == nil do
-		TriggerEvent('gcn:getSharedObject', function(obj) ESX = obj end)
+		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
 	while ESX.GetPlayerData() == nil do
@@ -28,8 +28,8 @@ Citizen.CreateThread(function()
 	LoadTeleporters()
 end)
 
-RegisterNetEvent("gcn:playerLoaded")
-AddEventHandler("gcn:playerLoaded", function(newData)
+RegisterNetEvent("esx:playerLoaded")
+AddEventHandler("esx:playerLoaded", function(newData)
 	PlayerData = newData
 	Citizen.Wait(25000)
 	ESX.TriggerServerCallback("gcn-qalle-jail:retrieveJailTime", function(inJail, newJailTime)
@@ -40,8 +40,8 @@ AddEventHandler("gcn:playerLoaded", function(newData)
 	end)
 end)
 
-RegisterNetEvent("gcn:setJob")
-AddEventHandler("gcn:setJob", function(response)
+RegisterNetEvent("esx:setJob")
+AddEventHandler("esx:setJob", function(response)
 	PlayerData["job"] = response
 end)
 
@@ -72,7 +72,7 @@ end
 function UnJail()
 	InJail()
 	ESX.Game.Teleport(PlayerPedId(), Config.Teleports["Boiling Broke"])
-	ESX.TriggerServerCallback('gcn_skin:getPlayerSkin', function(skin)
+	ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin)
 		TriggerEvent('skinchanger:loadSkin', skin)
 	end)
 	ESX.ShowNotification("You are released, stay calm outside! Good LucK!")
