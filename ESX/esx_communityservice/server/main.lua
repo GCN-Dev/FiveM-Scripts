@@ -25,21 +25,6 @@ end, {help = _U('give_player_community'), params = {{name = "id", help = _U('tar
 _U('system_msn')
 
 
-TriggerEvent('es:addGroupCommand', 'endcomservall', 'mod', function(source, args, user)
-	if args[1] then
-		if GetPlayerName(args[1]) ~= nil then
-			TriggerEvent('esx_communityservice:endCommunityServiceCommand', tonumber(args[1]))
-		else
-			TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('invalid_player_id')  } } )
-		end
-	else
-		TriggerEvent('esx_communityservice:endCommunityServiceCommand', source)
-	end
-end, function(source)
-	TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('insufficient_permissions') } })
-end, {help = _U('unjail_people'), params = {{name = "id", help = _U('target_id')}}})
-
-
 RegisterServerEvent('esx_communityservice:endCommunityServiceCommand')
 AddEventHandler('esx_communityservice:endCommunityServiceCommand', function(source)
 	if source ~= nil then
@@ -88,7 +73,7 @@ countUsingEvent = {}
 CreateThread(function()
 	while true do
 		countUsingEvent = {}
-		Wait(3000) -- 3 Segundos
+		Wait(3000)
 	end
 end)
 
@@ -123,35 +108,18 @@ end)
 
 RegisterServerEvent('esx_communityservice:checkIfSentenced')
 AddEventHandler('esx_communityservice:checkIfSentenced', function()
-	local _source = source -- cannot parse source to client trigger for some weird reason
-	local identifier = GetPlayerIdentifiers(_source)[1] -- get steam identifier
-
+	local _source = source
+	local identifier = GetPlayerIdentifiers(_source)[1]
 	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
 	}, function(result)
 		if result[1] ~= nil and result[1].actions_remaining > 0 then
-			--TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('jailed_msg', GetPlayerName(_source), ESX.Math.Round(result[1].jail_time / 60)) }, color = { 147, 196, 109 } })
 			TriggerClientEvent('esx_communityservice:inCommunityService', _source, tonumber(result[1].actions_remaining))
 		end
 	end)
 end)
 
 function releaseFromCommunityService(target)
-	local identifier = GetPlayerIdentifiers(target)[1]
-	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
-		['@identifier'] = identifier
-	}, function(result)
-		if result[1] then
-			MySQL.Async.execute('DELETE from communityservice WHERE identifier = @identifier', {
-				['@identifier'] = identifier
-			})
-			TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('comserv_finished', GetPlayerName(target)) }, color = { 147, 196, 109 } })
-		end
-	end)
-	TriggerClientEvent('esx_communityservice:finishCommunityService', target)
-end
-
-function releaseFromCommunityServiceAll()
 	local identifier = GetPlayerIdentifiers(target)[1]
 	MySQL.Async.fetchAll('SELECT * FROM communityservice WHERE identifier = @identifier', {
 		['@identifier'] = identifier
