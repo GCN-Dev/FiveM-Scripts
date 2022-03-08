@@ -120,7 +120,6 @@ AddEventHandler('cmg3_animations:syncTarget', function(target, animationLib, ani
 	if spin == nil then spin = 180.0 end
 	if attach then
 		AttachEntityToEntity(GetPlayerPed(-1), targetPed, 0, distans2, distans, height, 0.5, 0.5, spin, false, false, false, false, 2, false)
-	else
 	end
 
 	if controlFlag == nil then controlFlag = 0 end
