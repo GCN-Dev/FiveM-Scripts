@@ -43,8 +43,8 @@ RegisterCommand("unjail", function(src, args)
 end)
 
 
-RegisterServerEvent("gcn-qalle-jail:jailPlayer")
-AddEventHandler("gcn-qalle-jail:jailPlayer", function(targetSrc, jailTime, jailReason)
+RegisterServerEvent("esx-qalle-jail:jailPlayer")
+AddEventHandler("esx-qalle-jail:jailPlayer", function(targetSrc, jailTime, jailReason)
 	local src = tonumber(source)
 	local targetSrc = tonumber(targetSrc)
 	if jailReason == nil or jailReason == '' or jailTime == nil or jailTime == '' then return end
@@ -63,8 +63,8 @@ AddEventHandler("gcn-qalle-jail:jailPlayer", function(targetSrc, jailTime, jailR
 	TriggerClientEvent("esx:showNotification", src, GetPlayerName(targetSrc) .. " Jailed for " .. jailTime .. " minutes!")
 end)
 
-RegisterServerEvent("gcn-qalle-jail:unJailPlayer")
-AddEventHandler("gcn-qalle-jail:unJailPlayer", function(targetIdentifier)
+RegisterServerEvent("esx-qalle-jail:unJailPlayer")
+AddEventHandler("esx-qalle-jail:unJailPlayer", function(targetIdentifier)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromIdentifier(targetIdentifier)
 	if xPlayer ~= nil then
@@ -78,14 +78,14 @@ AddEventHandler("gcn-qalle-jail:unJailPlayer", function(targetIdentifier)
 	TriggerClientEvent("esx:showNotification", src, xPlayer.name .. " Unjailed!")
 end)
 
-RegisterServerEvent("gcn-qalle-jail:updateJailTime")
-AddEventHandler("gcn-qalle-jail:updateJailTime", function(newJailTime)
+RegisterServerEvent("esx-qalle-jail:updateJailTime")
+AddEventHandler("esx-qalle-jail:updateJailTime", function(newJailTime)
 	local src = source
 	EditJailTime(src, newJailTime)
 end)
 
-RegisterServerEvent("gcn-qalle-jail:prisonWorkReward")
-AddEventHandler("gcn-qalle-jail:prisonWorkReward", function()
+RegisterServerEvent("esx-qalle-jail:prisonWorkReward")
+AddEventHandler("esx-qalle-jail:prisonWorkReward", function()
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	xPlayer.addMoney(math.random(13, 21))
@@ -93,12 +93,12 @@ AddEventHandler("gcn-qalle-jail:prisonWorkReward", function()
 end)
 
 function JailPlayer(jailPlayer, jailTime)
-	TriggerClientEvent("gcn-qalle-jail:jailPlayer", jailPlayer, jailTime)
+	TriggerClientEvent("esx-qalle-jail:jailPlayer", jailPlayer, jailTime)
 	EditJailTime(jailPlayer, jailTime)
 end
 
 function UnJail(jailPlayer)
-	TriggerClientEvent("gcn-qalle-jail:unJailPlayer", jailPlayer)
+	TriggerClientEvent("esx-qalle-jail:unJailPlayer", jailPlayer)
 	EditJailTime(jailPlayer, 0)
 end
 
@@ -119,7 +119,7 @@ function GetRPName(playerId, data)
 	end)
 end
 
-ESX.RegisterServerCallback("gcn-qalle-jail:retrieveJailedPlayers", function(source, cb)
+ESX.RegisterServerCallback("esx-qalle-jail:retrieveJailedPlayers", function(source, cb)
 	local jailedPersons = {}
 	MySQL.Async.fetchAll("SELECT firstname, lastname, jail, identifier FROM users WHERE jail > @jail", { ["@jail"] = 0 }, function(result)
 		for i = 1, #result, 1 do
@@ -129,7 +129,7 @@ ESX.RegisterServerCallback("gcn-qalle-jail:retrieveJailedPlayers", function(sour
 	end)
 end)
 
-ESX.RegisterServerCallback("gcn-qalle-jail:retrieveJailTime", function(source, cb)
+ESX.RegisterServerCallback("esx-qalle-jail:retrieveJailTime", function(source, cb)
 	local src = source
 	local xPlayer = ESX.GetPlayerFromId(src)
 	local Identifier = xPlayer.identifier

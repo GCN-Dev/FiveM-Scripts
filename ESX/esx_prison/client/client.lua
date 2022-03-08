@@ -19,7 +19,7 @@ RegisterNetEvent("esx:playerLoaded")
 AddEventHandler("esx:playerLoaded", function(newData)
 	PlayerData = newData
 	Citizen.Wait(25000)
-	ESX.TriggerServerCallback("gcn-qalle-jail:retrieveJailTime", function(inJail, newJailTime)
+	ESX.TriggerServerCallback("esx-qalle-jail:retrieveJailTime", function(inJail, newJailTime)
 		if inJail then
 			jailTime = newJailTime
 			JailLogin()
@@ -32,19 +32,19 @@ AddEventHandler("esx:setJob", function(response)
 	PlayerData["job"] = response
 end)
 
-RegisterNetEvent("gcn-qalle-jail:openJailMenu")
-AddEventHandler("gcn-qalle-jail:openJailMenu", function()
+RegisterNetEvent("esx-qalle-jail:openJailMenu")
+AddEventHandler("esx-qalle-jail:openJailMenu", function()
 	OpenJailMenu()
 end)
 
-RegisterNetEvent("gcn-qalle-jail:jailPlayer")
-AddEventHandler("gcn-qalle-jail:jailPlayer", function(newJailTime)
+RegisterNetEvent("esx-qalle-jail:jailPlayer")
+AddEventHandler("esx-qalle-jail:jailPlayer", function(newJailTime)
 	jailTime = newJailTime
 	Cutscene()
 end)
 
-RegisterNetEvent("gcn-qalle-jail:unJailPlayer")
-AddEventHandler("gcn-qalle-jail:unJailPlayer", function()
+RegisterNetEvent("esx-qalle-jail:unJailPlayer")
+AddEventHandler("esx-qalle-jail:unJailPlayer", function()
 	jailTime = 0
 	UnJail()
 end)
@@ -70,10 +70,10 @@ function InJail()
 		while jailTime > 0 do
 			jailTime = jailTime - 1
 			ESX.ShowNotification("You have " .. jailTime .. " minutes left in jail!")
-			TriggerServerEvent("gcn-qalle-jail:updateJailTime", jailTime)
+			TriggerServerEvent("esx-qalle-jail:updateJailTime", jailTime)
 			if jailTime == 0 then
 				UnJail()
-				TriggerServerEvent("gcn-qalle-jail:updateJailTime", 0)
+				TriggerServerEvent("esx-qalle-jail:updateJailTime", 0)
 			end
 			Citizen.Wait(60000)
 		end
@@ -186,7 +186,7 @@ function DeliverPackage(packageId)
 					DeleteEntity(packageId)
 					ClearPedTasks(PlayerPedId())
 					Packaging = false
-					TriggerServerEvent("gcn-qalle-jail:prisonWorkReward")
+					TriggerServerEvent("esx-qalle-jail:prisonWorkReward")
 				end
 			end
 		end
@@ -230,7 +230,7 @@ function OpenJailMenu()
 								  	ESX.ShowNotification("No players nearby!")
 								else
 									if reason == nil or reason == '' then reason = 'NADA' end
-								  	TriggerServerEvent("gcn-qalle-jail:jailPlayer", GetPlayerServerId(closestPlayer), jailTime, reason)
+								  	TriggerServerEvent("esx-qalle-jail:jailPlayer", GetPlayerServerId(closestPlayer), jailTime, reason)
 								end
 						  	end
 						end, function(data3, menu3)
@@ -243,7 +243,7 @@ function OpenJailMenu()
 			end)
 		elseif action == "unjail_player" then
 			local elements = {}
-			ESX.TriggerServerCallback("gcn-qalle-jail:retrieveJailedPlayers", function(playerArray)
+			ESX.TriggerServerCallback("esx-qalle-jail:retrieveJailedPlayers", function(playerArray)
 				if #playerArray == 0 then
 					ESX.ShowNotification("Your jail is empty!")
 					return
@@ -257,7 +257,7 @@ function OpenJailMenu()
 					elements = elements
 				}, function(data2, menu2)
 					local action = data2.current.value
-					TriggerServerEvent("gcn-qalle-jail:unJailPlayer", action)
+					TriggerServerEvent("esx-qalle-jail:unJailPlayer", action)
 					menu2.close()
 				end, function(data2, menu2)
 					menu2.close()
