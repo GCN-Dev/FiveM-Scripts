@@ -14,7 +14,7 @@ end, {help = _U('give_player_community'), params = {{name = "id", help = _U('tar
 _U('system_msn')
 
 
-TriggerEvent('es:addGroupCommand', 'endcomservall', 'mod', function(source, args, user)
+TriggerEvent('es:addGroupCommand', 'endcomserv', 'mod', function(source, args, user)
 	if args[1] then
 		if GetPlayerName(args[1]) ~= nil then
 			TriggerEvent('esx_communityservice:endCommunityServiceCommand', tonumber(args[1]))
