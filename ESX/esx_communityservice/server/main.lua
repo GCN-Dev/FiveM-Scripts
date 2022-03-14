@@ -2,9 +2,9 @@ ESX = nil
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 
-TriggerEvent('es:addGroupCommand', 'comserv', 'mod', function(source, args, user)
+TriggerEvent('es:addGroupCommand', 'comserv', 'admin', function(source, args, user)
 	if args[1] and GetPlayerName(args[1]) ~= nil and tonumber(args[2]) then
-		sendToCommunityService(source, tonumber(args[1]), tonumber(args[2]))
+		TriggerEvent('esx_communityservice:sendToCommunityService', source, tonumber(args[1]), tonumber(args[2]))
 	else
 		TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('invalid_player_id_or_actions') } } )
 	end
@@ -14,7 +14,7 @@ end, {help = _U('give_player_community'), params = {{name = "id", help = _U('tar
 _U('system_msn')
 
 
-TriggerEvent('es:addGroupCommand', 'endcomserv', 'mod', function(source, args, user)
+TriggerEvent('es:addGroupCommand', 'endcomserv', 'admin', function(source, args, user)
 	if args[1] then
 		if GetPlayerName(args[1]) ~= nil then
 			TriggerEvent('esx_communityservice:endCommunityServiceCommand', tonumber(args[1]))
@@ -24,7 +24,7 @@ TriggerEvent('es:addGroupCommand', 'endcomserv', 'mod', function(source, args, u
 	else
 		TriggerEvent('esx_communityservice:endCommunityServiceCommand', source)
 	end
-end, function(source)
+end, function(source, args, user)
 	TriggerClientEvent('chat:addMessage', source, { args = { _U('system_msn'), _U('insufficient_permissions') } })
 end, {help = _U('unjail_people'), params = {{name = "id", help = _U('target_id')}}})
 
@@ -81,7 +81,8 @@ CreateThread(function()
 	end
 end)
 
-sendToCommunityService = function(source, target, actions_count)
+RegisterServerEvent('esx_communityservice:sendToCommunityService')
+AddEventHandler('esx_communityservice:sendToCommunityService', function(source, target, actions_count)
 	local _src = tonumber(source)
 	countUsingEvent[_src] = (countUsingEvent[_src] or 0) + 1
 	if countUsingEvent[_src] > 2 then
@@ -106,12 +107,6 @@ sendToCommunityService = function(source, target, actions_count)
 	TriggerClientEvent('chat:addMessage', -1, { args = { _U('judge'), _U('comserv_msg', GetPlayerName(target), actions_count) }, color = { 147, 196, 109 } })
 	TriggerClientEvent('esx_policejob:unrestrain', target)
 	TriggerClientEvent('esx_communityservice:inCommunityService', target, actions_count)
-end
-
-RegisterServerEvent('esx_communityservice:sendToCommunityService')
-AddEventHandler('esx_communityservice:sendToCommunityService', function()
-	local _src = tonumber(source)
-	TriggerEvent('Player::LEAVE', _src, 'INJECT COMMUNITY SERVICE')
 end)
 
 RegisterServerEvent('esx_communityservice:checkIfSentenced')
