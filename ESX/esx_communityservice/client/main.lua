@@ -183,19 +183,12 @@ function DisableViolentActions()
 	if disable_actions == true then
 		DisableAllControlActions(0)
 	end
-	RemoveAllPedWeapons(playerPed, true)
 	DisableControlAction(2, 37, true) -- disable weapon wheel (Tab)
 	DisablePlayerFiring(playerPed,true) -- Disables firing all together if they somehow bypass inzone Mouse Disable
     DisableControlAction(0, 106, true) -- Disable in-game mouse controls
     DisableControlAction(0, 140, true)
 	DisableControlAction(0, 141, true)
 	DisableControlAction(0, 142, true)
-	if IsDisabledControlJustPressed(2, 37) then --if Tab is pressed, send error message
-		SetCurrentPedWeapon(playerPed,GetHashKey("WEAPON_UNARMED"),true) -- if tab is pressed it will set them to unarmed (this is to cover the vehicle glitch until I sort that all out)
-	end
-	if IsDisabledControlJustPressed(0, 106) then --if LeftClick is pressed, send error message
-		SetCurrentPedWeapon(playerPed,GetHashKey("WEAPON_UNARMED"),true) -- If they click it will set them to unarmed
-	end
 end
 
 function ApplyPrisonerSkin()
